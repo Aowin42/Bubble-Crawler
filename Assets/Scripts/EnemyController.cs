@@ -1,10 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.Callbacks;
 using UnityEngine;
 using System;
-using UnityEngine.UIElements;
 using static Unity.Mathematics.math;
 
 public class EnemyController : MonoBehaviour

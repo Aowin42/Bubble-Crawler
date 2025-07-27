@@ -48,7 +48,11 @@ public class StatChangeButton : MonoBehaviour
     public float statChange = 1f;
 
 
+    /// <summary>
+    /// FIX THIS PIECE OF SHIT CODE THAT DOESN'T ACCOUNT FOR WHERE WE START THE CHANGING OF STATS FROM
+    /// </summary>
     private bool CheckButtonEnabled()
+
     {
         if (stats.statPntRemaining == 0 && buttonState == ButtonState.Add)   // Disable if this is adding to stats 
                                                                              // and we have no more remaining
@@ -61,6 +65,18 @@ public class StatChangeButton : MonoBehaviour
         {
             return false;
         }
+
+        else if (stats.GetStatValue(type) == stats.GetStatCopy(type) && buttonState == ButtonState.Subtract)
+        {
+            return false;
+        }
+
+        // Checks if value is zero and disables subtract mode
+        else if (stats.GetStatValue(type) == 0 && buttonState == ButtonState.Subtract)
+        {
+            return false;
+        }
+
         return true;
     }
 

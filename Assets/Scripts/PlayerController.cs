@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
         UI = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UIManager>();
         gameState = GameObject.FindGameObjectWithTag("GameStateManager").GetComponent<GameStateManager>();
         MainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-        shotCooldown = 1f / stats.GetStat(StatType.fireRate);
+        shotCooldown = 1f / stats.GetStatValue(StatType.fireRate);
     }
 
 
@@ -56,30 +56,30 @@ public class PlayerController : MonoBehaviour
         }
 
         // The actual force of player movement
-        movementForce = movementForce.normalized * stats.GetStat(StatType.moveSpeed);
+        movementForce = movementForce.normalized * stats.GetStatValue(StatType.moveSpeed);
 
         // Friction forces        F_fric = -kv
-        Vector2 frictionForce = -stats.GetStat(StatType.friction) * rb.velocity.magnitude * rb.velocity.normalized;
+        Vector2 frictionForce = -stats.GetStatValue(StatType.friction) * rb.velocity.magnitude * rb.velocity.normalized;
 
         // Updating Velocity F_sum = F_res
         rb.velocity += new Vector2(movementForce.x + frictionForce.x,
                                    movementForce.y + frictionForce.y) * Time.deltaTime;
 
         // Caps the velocity by setting the velocity to max, and adjusting the sign ()
-        if (abs(rb.velocity.x) > stats.GetStat(StatType.maxSpeed))
+        if (abs(rb.velocity.x) > stats.GetStatValue(StatType.maxSpeed))
         {
-            rb.velocity = new Vector2(stats.GetStat(StatType.maxSpeed) * (1 - 2 * Convert.ToInt16(rb.velocity.x < 0)), rb.velocity.y);
+            rb.velocity = new Vector2(stats.GetStatValue(StatType.maxSpeed) * (1 - 2 * Convert.ToInt16(rb.velocity.x < 0)), rb.velocity.y);
         }
-        if (abs(rb.velocity.y) > stats.GetStat(StatType.maxSpeed))
+        if (abs(rb.velocity.y) > stats.GetStatValue(StatType.maxSpeed))
         {
-            rb.velocity = new Vector2(rb.velocity.x, stats.GetStat(StatType.maxSpeed) * (1 - 2 * Convert.ToInt16(rb.velocity.y < 0)));
+            rb.velocity = new Vector2(rb.velocity.x, stats.GetStatValue(StatType.maxSpeed) * (1 - 2 * Convert.ToInt16(rb.velocity.y < 0)));
         }
     }
 
     void WeaponControls(ref float shotCooldown) // adding a reference to modify the value directly
     {
         shotCooldown += Time.deltaTime;
-        if ((shotCooldown > 1f / stats.GetStat(StatType.fireRate)) && Input.GetMouseButton(0))
+        if ((shotCooldown > 1f / stats.GetStatValue(StatType.fireRate)) && Input.GetMouseButton(0))
         {
 
 
@@ -93,8 +93,8 @@ public class PlayerController : MonoBehaviour
             ProjectilePlayer script = obj.GetComponent<ProjectilePlayer>();
             if (script != null)
             {
-                script.SetDamage(stats.GetStat(StatType.damage));   // sets the bullet damage to enemy DMG
-                script.SetSpeed(stats.GetStat(StatType.bulletSpeed));
+                script.SetDamage(stats.GetStatValue(StatType.damage));   // sets the bullet damage to enemy DMG
+                script.SetSpeed(stats.GetStatValue(StatType.bulletSpeed));
             }
         }
     }
@@ -112,22 +112,11 @@ public class PlayerController : MonoBehaviour
 
             Debug.Log("Damage TAKEN:" + bulletDMG);
 
-            Debug.Log("CURRENT HP" + stats.GetStat(StatType.hitPoints));
+            Debug.Log("CURRENT HP" + stats.GetStatValue(StatType.hitPoints));
 
-            Destroy(collision.gameObject);
-        }
-
-
-        if (collision.CompareTag("EXP"))
-        {
-            // Adding Exp to Player stats and removing exp Orb.
-            stats.exp += collision.GetComponent<ExpBubble>().exp;
             Destroy(collision.gameObject);
         }
     }
-
-
-
 
     // Update is called once per frame
     void FixedUpdate()
@@ -145,7 +134,7 @@ public class PlayerController : MonoBehaviour
 
 
         // Initiates Player Death
-        if (stats.GetStat(StatType.hitPoints) <= 0)
+        if (stats.GetStatValue(StatType.hitPoints) <= 0)
         {
             stats.OnDeath();
         }

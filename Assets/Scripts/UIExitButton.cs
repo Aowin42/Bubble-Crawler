@@ -33,6 +33,7 @@ public class UIExitButton : MonoBehaviour
         {
             menuExitButton.interactable = true;
         }
+        else { menuExitButton.interactable = false; }
     }
 
     public void ExitMenu()

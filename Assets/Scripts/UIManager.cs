@@ -32,8 +32,8 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void UpdateLevelUpScreen()
     {
-        hpText.text = stats.GetStat(StatType.hitPoints).ToString();
-        dmgText.text = stats.GetStat(StatType.damage).ToString();
+        hpText.text = stats.GetStatValue(StatType.hitPoints).ToString();
+        dmgText.text = stats.GetStatValue(StatType.damage).ToString();
         statCounterText.text = "Stat points remaining: " + stats.statPntRemaining.ToString();
     }
 

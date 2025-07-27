@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.VisualScripting;
@@ -17,6 +16,8 @@ public class Stat
 {
     public StatType type;
     public float value;
+
+    public float valueCopy; // Each stat also has a copy of what its value was before the level up.
 }
 
 public class PlayerStats : MonoBehaviour
@@ -27,7 +28,22 @@ public class PlayerStats : MonoBehaviour
 
     [SerializeField]
     public int level, exp = 0, expToLevel = 50, statPointsOnLvlUp = 3, statPntRemaining = 0;
+
+
+
+
     public int statTotalReceived = 0;
+
+
+
+    public void MakeStatCopy()
+    { 
+        for (int i = 0; i < stats.Count; i++)
+        {
+            stats[i].valueCopy = stats[i].value;
+        }
+    }
+
 
     public void ModifyStat(StatType type, float delta)
     /// <Summary>
@@ -44,19 +60,26 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
-    public float GetStat(StatType type)
+    public float GetStatValue(StatType type)
     {
         return stats.Find(s => s.type == type).value;
     }
+    
+    public float GetStatCopy(StatType type)
+    {
+        return stats.Find(s => s.type == type).valueCopy;
+    }
+
 
     public void OnDeath()
-    { 
+    {
         Destroy(gameObject);
     }
 
 
     public void DoLevelUp()
     {
+        MakeStatCopy();                         // Copies the stats to tell the buttons how far down they go
         statPntRemaining = statPointsOnLvlUp;  // Setting the number of statpoints left
         statTotalReceived += statPointsOnLvlUp;
         exp -= expToLevel;
